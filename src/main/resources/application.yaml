@@ -1,5 +1,17 @@
 logging:
   level:
-    org:
-      apache: warn
-      spark_project: warn
+    root: warn
+#    org:
+#      apache: warn
+#      spark_project: warn
+spark:
+  deployMode: client
+  master: local[*]
+  appName: spark-kafka-example
+kafka:
+  bootstrapServers: node-3:9092
+  consumerGroup: spark.test.group
+  keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+  valueDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+  topics: spark.test
+  enabled: true

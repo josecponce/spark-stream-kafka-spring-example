@@ -7,16 +7,18 @@ import org.apache.spark.streaming.dstream.InputDStream
 import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
 import org.apache.spark.streaming.{Duration, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
+import org.springframework.boot.autoconfigure.condition.{ConditionalOnExpression, ConditionalOnProperty}
 import org.springframework.context.annotation.{Bean, Configuration}
 
 @Configuration
-class IOCConfiguration {
+class IOCConfiguration() {
+  private val DEPLOY_MODE = "spark.submit.deployMode"
 
   @Bean
-  def sparkConf(): SparkConf = new SparkConf(false).set("spark.submit.deployMode", "client")
+  def sparkConf(config: SparkProperties): SparkConf = new SparkConf(false).set(DEPLOY_MODE, config.getDeployMode)
 
   @Bean
-  def sc(sparkConf: SparkConf): SparkContext = new SparkContext("local[4]", "spark-kafka-exapmle", sparkConf)
+  def sc(config: SparkProperties, sparkConf: SparkConf): SparkContext = new SparkContext(config.getMaster, config.getAppName, sparkConf)
 
   @Bean
   def sqlContext(sc: SparkContext): SQLContext = new SQLContext(sc)
@@ -28,16 +30,17 @@ class IOCConfiguration {
   def scc(sc: SparkContext): StreamingContext = new StreamingContext(sc, Duration(2000))
 
   @Bean
-  def stream(ssc: StreamingContext): InputDStream[ConsumerRecord[String, String]] = {
+  @ConditionalOnProperty(Array("kafka.enabled"))
+  def stream(config: KafkaProperties, ssc: StreamingContext): InputDStream[ConsumerRecord[String, String]] = {
     var kafkaParams = Map[String, Object](
-      ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> "node-3:9092",
-      ConsumerConfig.GROUP_ID_CONFIG -> "spark.test.group",
+      ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> config.getBootstrapServers,
+      ConsumerConfig.GROUP_ID_CONFIG -> config.getConsumerGroup,
       ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG -> classOf[StringDeserializer],
       ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG -> classOf[StringDeserializer]
     )
 
     KafkaUtils.createDirectStream[String, String](ssc, LocationStrategies.PreferConsistent,
-      ConsumerStrategies.Subscribe[String, String](Array("spark.test").toSet, kafkaParams))
+      ConsumerStrategies.Subscribe[String, String](config.getTopics.toSet, kafkaParams))
 
   }
 }
