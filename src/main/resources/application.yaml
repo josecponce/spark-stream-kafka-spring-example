@@ -14,4 +14,8 @@ kafka:
   keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
   valueDeserializer: org.apache.kafka.common.serialization.StringDeserializer
   topics: spark.test
-  enabled: true
+  enabled: false
+database:
+  username: dwUser
+  password: Password01
+  jdbcUrl: jdbc:sqlserver://biwfmdm-datavault-member-1.mia.ucloud.int;Database=WFM_DATAMART

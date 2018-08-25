@@ -1,7 +1,9 @@
-import com.example.spark.spring.Application
+import java.util.Properties
+
+import com.example.spark.spring.{Application, DatabaseProperties}
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.DStream
 import org.springframework.context.ApplicationContext
@@ -15,6 +17,14 @@ object config {
       _context = Application.context
     }
     _context
+  }
+
+  def table(table: String): DataFrame = {
+    val configuration = context.getBean(classOf[DatabaseProperties])
+    val props = new Properties()
+    props.setProperty("user", configuration.getUsername)
+    props.setProperty("password", configuration.getPassword)
+    spark.read.jdbc(configuration.getJdbcUrl, table, props)
   }
 
   implicit def sc: SparkContext = context.getBean(classOf[SparkContext])
