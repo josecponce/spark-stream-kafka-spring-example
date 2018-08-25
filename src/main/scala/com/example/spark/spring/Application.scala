@@ -2,13 +2,12 @@ package com.example.spark.spring
 
 import java.util.Properties
 
-import lombok.extern.slf4j.Slf4j
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.spark.sql.{SaveMode, SparkSession}
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.InputDStream
-import org.springframework.boot.{ApplicationArguments, ApplicationRunner, SpringApplication}
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.{ApplicationArguments, ApplicationRunner, SpringApplication}
 import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
