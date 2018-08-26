@@ -27,8 +27,8 @@ object config {
     spark.read.jdbc(configuration.getJdbcUrl, table, props)
   }
 
-  implicit def sc: SparkContext = context.getBean(classOf[SparkContext])
-  implicit def ssc: StreamingContext = context.getBean(classOf[StreamingContext])
-  implicit def spark: SparkSession = context.getBean(classOf[SparkSession])
-  implicit def stream: DStream[ConsumerRecord[String, String]] = context.getBean(classOf[DStream[ConsumerRecord[String, String]]])
+  def sc: SparkContext = context.getBean(classOf[SparkContext])
+  def ssc: StreamingContext = context.getBean(classOf[StreamingContext])
+  def spark: SparkSession = context.getBean(classOf[SparkSession])
+  def stream: DStream[ConsumerRecord[String, String]] = context.getBean(classOf[DStream[ConsumerRecord[String, String]]])
 }

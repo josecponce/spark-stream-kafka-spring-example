@@ -7,15 +7,20 @@ import org.apache.spark.streaming.dstream.InputDStream
 import org.apache.spark.streaming.kafka010.{ConsumerStrategies, KafkaUtils, LocationStrategies}
 import org.apache.spark.streaming.{Duration, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
-import org.springframework.boot.autoconfigure.condition.{ConditionalOnExpression, ConditionalOnProperty}
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.{Bean, Configuration}
 
 @Configuration
 class IOCConfiguration() {
   private val DEPLOY_MODE = "spark.submit.deployMode"
+  private val SERIALIZER = "spark.serializer"
+  private val KRYO_SERIALIZER = "org.apache.spark.serializer.KryoSerializer"
+
 
   @Bean
-  def sparkConf(config: SparkProperties): SparkConf = new SparkConf(false).set(DEPLOY_MODE, config.getDeployMode)
+  def sparkConf(config: SparkProperties): SparkConf = new SparkConf(false)
+    .set(DEPLOY_MODE, config.getDeployMode)
+    .set(SERIALIZER, KRYO_SERIALIZER)
 
   @Bean
   def sc(config: SparkProperties, sparkConf: SparkConf): SparkContext = new SparkContext(config.getMaster, config.getAppName, sparkConf)
