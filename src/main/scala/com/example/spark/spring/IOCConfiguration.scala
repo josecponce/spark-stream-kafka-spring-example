@@ -9,6 +9,7 @@ import org.apache.spark.streaming.{Duration, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.{Bean, Configuration}
+import java.math.BigDecimal
 
 @Configuration
 class IOCConfiguration() {
@@ -17,8 +18,8 @@ class IOCConfiguration() {
   def sparkConf(config: SparkProperties): SparkConf = new SparkConf(false)
     .set("spark.submit.deployMode", config.getDeployMode)
     .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    .set("spark.memory.offHeap.enabled", (config.getOffHeapMemoryGb > 0).toString )
-    .set("spark.memory.offHeap.size", (config.getOffHeapMemoryGb * 1024 * 1024 * 1024).toString)
+    .set("spark.memory.offHeap.enabled", (config.getOffHeapMemoryGb.compareTo(BigDecimal.ZERO) != 0).toString)
+    .set("spark.memory.offHeap.size", config.getOffHeapMemoryGb.multiply(BigDecimal.valueOf(1024L * 1024 * 1024)).toString)
 
   @Bean
   def sc(config: SparkProperties, sparkConf: SparkConf): SparkContext = new SparkContext(config.getMaster, config.getAppName, sparkConf)

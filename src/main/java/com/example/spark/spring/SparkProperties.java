@@ -3,13 +3,15 @@ package com.example.spark.spring;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @ConfigurationProperties("spark")
 public class SparkProperties {
   private String deployMode;
   private String master;
   private String appName;
-  private long offHeapMemoryGb;
+  private BigDecimal offHeapMemoryGb = BigDecimal.ZERO;
 
     public String getDeployMode() {
         return deployMode;
@@ -35,11 +37,11 @@ public class SparkProperties {
         this.appName = appName;
     }
 
-    public long getOffHeapMemoryGb() {
+    public BigDecimal getOffHeapMemoryGb() {
         return offHeapMemoryGb;
     }
 
-    public void setOffHeapMemoryGb(long offHeapMemoryGb) {
+    public void setOffHeapMemoryGb(BigDecimal offHeapMemoryGb) {
         this.offHeapMemoryGb = offHeapMemoryGb;
     }
 }
