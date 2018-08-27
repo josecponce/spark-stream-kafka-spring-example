@@ -9,6 +9,7 @@ public class SparkProperties {
   private String deployMode;
   private String master;
   private String appName;
+  private long offHeapMemoryGb;
 
     public String getDeployMode() {
         return deployMode;
@@ -32,5 +33,13 @@ public class SparkProperties {
 
     public void setAppName(String appName) {
         this.appName = appName;
+    }
+
+    public long getOffHeapMemoryGb() {
+        return offHeapMemoryGb;
+    }
+
+    public void setOffHeapMemoryGb(long offHeapMemoryGb) {
+        this.offHeapMemoryGb = offHeapMemoryGb;
     }
 }

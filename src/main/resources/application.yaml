@@ -8,6 +8,7 @@ spark:
   deployMode: client
   master: local[*]
   appName: spark-kafka-example
+  offHeapMemoryGb: 2
 kafka:
   bootstrapServers: node-3:9092
   consumerGroup: spark.test.group

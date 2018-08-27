@@ -12,15 +12,13 @@ import org.springframework.context.annotation.{Bean, Configuration}
 
 @Configuration
 class IOCConfiguration() {
-  private val DEPLOY_MODE = "spark.submit.deployMode"
-  private val SERIALIZER = "spark.serializer"
-  private val KRYO_SERIALIZER = "org.apache.spark.serializer.KryoSerializer"
-
 
   @Bean
   def sparkConf(config: SparkProperties): SparkConf = new SparkConf(false)
-    .set(DEPLOY_MODE, config.getDeployMode)
-    .set(SERIALIZER, KRYO_SERIALIZER)
+    .set("spark.submit.deployMode", config.getDeployMode)
+    .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    .set("spark.memory.offHeap.enabled", (config.getOffHeapMemoryGb > 0).toString )
+    .set("spark.memory.offHeap.size", (config.getOffHeapMemoryGb * 1024 * 1024 * 1024).toString)
 
   @Bean
   def sc(config: SparkProperties, sparkConf: SparkConf): SparkContext = new SparkContext(config.getMaster, config.getAppName, sparkConf)

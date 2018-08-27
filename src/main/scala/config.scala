@@ -19,6 +19,13 @@ object config {
     _context
   }
 
+  def time(action: () => Any): Any = {
+    val start = System.currentTimeMillis()
+    val result = action()
+    println(s"Elapsed: ${(System.currentTimeMillis() - start)/1000}s")
+    result
+  }
+
   def table(table: String): DataFrame = {
     val configuration = context.getBean(classOf[DatabaseProperties])
     val props = new Properties()
